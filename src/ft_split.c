@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/pipex.h"
+#include "pipex.h"
 
 static void	ft_freeall(char **out, size_t j);
 static int	ft_checknextcset(char *s, char c);

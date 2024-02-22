@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/pipex.h"
+#include "pipex.h"
 
 int	pipex(int f1, struct s_cmd cmd, char **envp, char **argv)
 {
@@ -20,21 +20,21 @@ int	pipex(int f1, struct s_cmd cmd, char **envp, char **argv)
 	int		pfd[2];
 
 	if (pipe(pfd) == -1)
-		return (-1);
+		return (close(f1), -1);
 	pid1 = fork();
 	if (pid1 == -1)
-		return (-1);
+		return (close(f1), -1);
 	if (pid1 == 0)
 		if (child_process (f1, cmd, envp, pfd) == -1)
-			return (-1);
+			return (close(f1), -1);
 	close(f1);
 	f2 = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (f2 < 0)
 		return (-1);
 	if (parent_process(f2, cmd, envp, pfd) == -1)
-		return (-1);
+		return (close(f2), -1);
 	waitpid(pid1, &status, 0);
-	return (0);
+	return (close(f2), 0);
 }
 
 int	main(int argc, char *argv[], char **envp)
@@ -53,5 +53,5 @@ int	main(int argc, char *argv[], char **envp)
 	cmd.s_path = ft_check_cmd(argv[3], envp);
 	if (pipex(f1, cmd, envp, argv) == -1)
 		return (-1);
-	return (1);
+	return (0);
 }

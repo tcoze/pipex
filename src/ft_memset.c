@@ -6,11 +6,11 @@
 /*   By: tcoze <tcoze@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 19:55:00 by tcoze             #+#    #+#             */
-/*   Updated: 2023/11/14 03:49:01 by tcoze            ###   ########.fr       */
+/*   Updated: 2024/02/22 23:20:16 by tcoze            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/pipex.h"
+#include "pipex.h"
 
 void	*ft_memset(void *s, int c, size_t n)
 {

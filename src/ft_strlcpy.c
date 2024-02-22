@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/pipex.h"
+#include "pipex.h"
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {

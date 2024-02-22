@@ -6,23 +6,18 @@
 /*   By: tcoze <tcoze@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 09:00:38 by tcoze             #+#    #+#             */
-/*   Updated: 2024/02/10 17:11:23 by tcoze            ###   ########.fr       */
+/*   Updated: 2024/02/20 17:37:04 by tcoze            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/pipex.h"
-#include <stdio.h>
+#include "pipex.h"
+#include "ft_printf.h"
 
-static char	*ft_absolute_path(char *cmd)
+static char	*ft_absolute_path(char	*cmd)
 {
-	if (ft_strchr_str(cmd, "/"))
-	{
-		if (access(cmd, F_OK) == -1)
-			return (NULL);
-		else
-			return (cmd);
-	}
-	return (NULL);
+	if (access(cmd, F_OK) == -1)
+		return (NULL);
+	return (cmd);
 }
 
 static char	**ft_find_path(char **envp, char **path)
@@ -31,21 +26,20 @@ static char	**ft_find_path(char **envp, char **path)
 	char	*p_find;
 
 	i = 0;
-	while (envp[i] != NULL)
+	while (envp[i])
 	{
-		while (envp[i][0] != 'P')
-			i++;
-		if (ft_strchr_str(envp[i], "PATH=") != NULL)
+		if (ft_strchr_str(envp[i], "PATH=") != NULL
+			&& ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
 			p_find = ft_strchr_str(envp[i], "PATH=");
 			path = ft_split(p_find, ':');
 			if (path == NULL)
 				return (NULL);
-			break ;
+			return (path);
 		}
 		i++;
 	}
-	return (path);
+	return (NULL);
 }
 
 static int	ft_check_file(char *file1, char *file2)
@@ -73,8 +67,8 @@ char	*ft_check_cmd(char *cmd, char **envp)
 
 	i = 0;
 	path = NULL;
-	if (ft_absolute_path(cmd) != NULL)
-		return (cmd);
+	if (cmd[0] == '/')
+		return (ft_absolute_path(cmd));
 	path = ft_find_path(envp, path);
 	if (path == NULL)
 		return (NULL);
@@ -93,23 +87,23 @@ char	*ft_check_cmd(char *cmd, char **envp)
 
 int	check_parsing(int argc, char *argv[], char **envp)
 {
+	int	i;
+
+	i = 0;
 	if (argc != 5)
-		return (perror("not enought arguments"), -1);
+		return (ft_printf("not enough arguments\n"), -1);
+	if (ft_strncmp(argv[2], "sudo", 4) == 0
+		|| ft_strncmp(argv[3], "sudo", 4) == 0)
+		ft_printf("/usr/bin/sudo: Permission denied\n", i++);
 	if (ft_check_file(argv[1], argv[4]) == -1)
-		return (perror("Can't open/read file1"), -1);
+		ft_printf("%s: No such file or directory\n", argv[1], i++);
 	if (ft_check_file(argv[1], argv[4]) == -2)
-		return (perror("Can't open/read file2"), -1);
+		ft_printf("%s: Couldn't create file or directory\n", argv[4], i++);
 	if (ft_check_cmd(argv[2], envp) == NULL)
-	{
-		if (ft_check_cmd(argv[2], envp) == NULL)
-			return (perror("Command1 not found"), -1);
-		return (perror("unexpected error"), -1);
-	}
+		ft_printf("%s: command not found\n", argv[2], i++);
 	if (ft_check_cmd(argv[3], envp) == NULL)
-	{
-		if (ft_check_cmd(argv[3], envp) == NULL)
-			return (perror("Command2 not found"), -1);
-		return (perror("unexpected error"), -1);
-	}
+		ft_printf("%s: command not found\n", argv[3], i++);
+	if (i > 0)
+		return (-1);
 	return (0);
 }

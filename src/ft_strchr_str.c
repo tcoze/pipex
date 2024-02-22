@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/pipex.h"
+#include "pipex.h"
 
 char	*ft_strchr_str(char *s, char *c)
 {
@@ -21,16 +21,13 @@ char	*ft_strchr_str(char *s, char *c)
 	while (s[i] != '\0')
 	{
 		j = 0;
-		if (s[i] == c[j])
+		while (s[i] == c[j])
 		{
-			while (s[i] == c[j])
-			{
-				i++;
-				j++;
-			}
-			if (c[j] == '\0')
-				return (s + i);
+			i++;
+			j++;
 		}
+		if (c[j] == '\0')
+			return (s + i);
 		i++;
 	}
 	return (NULL);
