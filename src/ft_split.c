@@ -12,11 +12,10 @@
 
 #include "pipex.h"
 
-static void	ft_freeall(char **out, size_t j);
 static int	ft_checknextcset(char *s, char c);
 static int	ft_count(char *string, char c);
 
-static void	ft_freeall(char **out, size_t j)
+void	ft_freeall(char **out, size_t j)
 {
 	size_t	i;
 

@@ -43,5 +43,7 @@ int		child_process(int f1, struct s_cmd cmd, char **envp, int *pfd);
 int		parent_process(int f2, struct s_cmd cmd, char **envp, int *pfd);
 int		pipex(int f1, struct s_cmd cmd, char **envp, char **argv);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
+void	ft_freeall(char **out, size_t j);
+int		ft_count_path(char **path);
 
 #endif

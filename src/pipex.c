@@ -11,6 +11,19 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include <errno.h>
+
+int	ft_count_path(char **path)
+{
+	int	i;
+
+	i = 0;
+	if (path[0] == NULL)
+		return (0);
+	while (path[i] != NULL)
+		i++;
+	return (i);
+}
 
 int	pipex(int f1, struct s_cmd cmd, char **envp, char **argv)
 {
@@ -33,7 +46,8 @@ int	pipex(int f1, struct s_cmd cmd, char **envp, char **argv)
 		return (-1);
 	if (parent_process(f2, cmd, envp, pfd) == -1)
 		return (close(f2), -1);
-	waitpid(pid1, &status, 0);
+	while (errno != ECHILD)
+		waitpid(pid1, &status, 0);
 	return (close(f2), 0);
 }
 

@@ -22,7 +22,8 @@ int	child_process(int f1, struct s_cmd cmd, char **envp, int *pfd)
 		return (close(pfd[STDOUT_FILENO]), close(f1), -1);
 	if (close(pfd[STDOUT_FILENO]) == -1)
 		return (close(f1), -1);
-	close(f1);
+	if (close(f1) == -1)
+		return (-1);
 	if (execve(cmd.f_path, cmd.first, envp) == -1)
 		return (-1);
 	return (0);
@@ -38,7 +39,8 @@ int	parent_process(int f2, struct s_cmd cmd, char **envp, int *pfd)
 		return (close(pfd[STDIN_FILENO]), close(f2), -1);
 	if (close(pfd[STDIN_FILENO]) == -1)
 		return (close(f2), -1);
-	close(f2);
+	if (close(f2) == -1)
+		return (-1);
 	if (execve(cmd.s_path, cmd.second, envp) == -1)
 		return (-1);
 	return (0);
