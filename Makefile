@@ -3,7 +3,7 @@ NAME = pipex
 CFLAGS = -Wall -Wextra -Werror
 
 SRC_PATH = src/
-PRINTF_PATH = ft_dprintf/
+PRINTF_PATH = ft_printf/
 PRINTF = $(PRINTF_PATH)/libftprintf.a
 OBJ_PATH = obj/
 
@@ -16,8 +16,10 @@ SRC =	ft_bzero.c\
 		ft_strlcpy.c\
 		ft_strlen.c\
 		parsing.c\
+		parsing2.c\
 		pipex.c \
 		process.c \
+		ft_free.c \
 		ft_strncmp.c
 
 SRCS = $(addprefix $(SRC_PATH), $(SRC))
@@ -26,8 +28,11 @@ OBJS = $(addprefix $(OBJ_PATH), $(OBJ))
 
 all: $(OBJ_PATH) $(NAME)
 
-$(PRINTF): 
-	$(CC) $(CFLAGS) -I ft_dprintf/ -I header -c $< -o $@
+$(PRINTF):
+	$(MAKE) -C $(PRINTF_PATH)
+
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c #ft_printf/ft_printf.h header/pipex.h
+	$(CC) $(CFLAGS) -I ft_printf/ -I header -c $< -o $@
 
 $(OBJ_PATH):
 	mkdir $(OBJ_PATH)

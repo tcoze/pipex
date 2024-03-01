@@ -1,42 +1,53 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_blen.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tcoze <tcoze@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/11 19:53:47 by tcoze             #+#    #+#             */
-/*   Updated: 2023/11/15 21:02:08 by tcoze            ###   ########.fr       */
+/*   Created: 2023/11/26 18:37:03 by tcoze             #+#    #+#             */
+/*   Updated: 2023/12/04 21:03:18 by tcoze            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
 #include "ft_printf.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+int	ft_base_len(char *base)
 {
-	size_t			total;
-	size_t			i;
-	size_t			p;
-	char			*out;
+	int	i;
 
 	i = 0;
-	p = 0;
-	total = ft_strlen(s1) + ft_strlen(s2) + 1;
-	if (total <= 1)
-		return (ft_calloc(1, 1));
-	out = malloc (sizeof(char) * total);
-	if (!out)
-		return (NULL);
-	while (i < ft_strlen(s1))
+	if (base[0] == '\0')
+		return (0);
+	while (base[i])
 	{
-		out[i] = s1[i];
+		if (base[i] == '+' || base[i] == '-')
+			return (0);
 		i++;
 	}
-	while (p <= ft_strlen(s2))
+	if (i == 1)
+		return (0);
+	return (i);
+}
+
+int	ft_test_base(int len, char *base)
+{
+	int	x;
+	int	y;
+
+	x = 0;
+	y = 1;
+	while (x < len - 1)
 	{
-		out[i + p] = s2[p];
-		p++;
+		while (y < len)
+		{
+			if (base[x] == base[y])
+				return (0);
+			else
+				y++;
+		}
+		x++;
+		y = x + 1;
 	}
-	return (out);
+	return (1);
 }

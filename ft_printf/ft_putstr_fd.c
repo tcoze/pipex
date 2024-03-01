@@ -1,42 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tcoze <tcoze@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/11 19:53:47 by tcoze             #+#    #+#             */
-/*   Updated: 2023/11/15 21:02:08 by tcoze            ###   ########.fr       */
+/*   Created: 2023/11/14 00:34:43 by tcoze             #+#    #+#             */
+/*   Updated: 2023/12/04 20:45:13 by tcoze            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
 #include "ft_printf.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+int	ft_putstr_fd(char *s, int fd)
 {
-	size_t			total;
-	size_t			i;
-	size_t			p;
-	char			*out;
+	size_t	j;
 
-	i = 0;
-	p = 0;
-	total = ft_strlen(s1) + ft_strlen(s2) + 1;
-	if (total <= 1)
-		return (ft_calloc(1, 1));
-	out = malloc (sizeof(char) * total);
-	if (!out)
-		return (NULL);
-	while (i < ft_strlen(s1))
-	{
-		out[i] = s1[i];
-		i++;
-	}
-	while (p <= ft_strlen(s2))
-	{
-		out[i + p] = s2[p];
-		p++;
-	}
-	return (out);
+	if (s == NULL)
+		return (write(fd, "(null)", 6));
+	j = ft_strlen(s);
+	return (write(fd, s, j));
 }

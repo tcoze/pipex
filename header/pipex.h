@@ -6,7 +6,7 @@
 /*   By: tcoze <tcoze@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 08:59:42 by tcoze             #+#    #+#             */
-/*   Updated: 2024/01/29 08:59:42 by tcoze            ###   ########.fr       */
+/*   Updated: 2024/02/28 08:59:44 by tcoze            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_cmd
 	char	*s_path;
 }	t_cmd;
 
-int		check_parsing(int argc, char *argv[], char **envp);
+int		check_parsing(char *argv[], char **envp);
 char	**ft_split(char *s, char c);
 char	*ft_strchr_str(char *s, char *c);
 void	ft_bzero(void *s, size_t n);
@@ -41,9 +41,13 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_check_cmd(char *cmd, char **envp);
 int		child_process(int f1, struct s_cmd cmd, char **envp, int *pfd);
 int		parent_process(int f2, struct s_cmd cmd, char **envp, int *pfd);
-int		pipex(int f1, struct s_cmd cmd, char **envp, char **argv);
+int		pipex(int f1, struct s_cmd cmd, char **envp, int f2);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
-void	ft_freeall(char **out, size_t j);
 int		ft_count_path(char **path);
+char	*ft_check_access(char *str2);
+char	**ft_find_path(char **envp, char **path);
+void	clear_struct_f(struct s_cmd cmd);
+void	clear_struct(struct s_cmd cmd);
+void	ft_freeall(char **out, int j);
 
 #endif

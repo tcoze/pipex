@@ -15,19 +15,6 @@
 static int	ft_checknextcset(char *s, char c);
 static int	ft_count(char *string, char c);
 
-void	ft_freeall(char **out, size_t j)
-{
-	size_t	i;
-
-	i = 0;
-	while (i != j)
-	{
-		free(out[i]);
-		i++;
-	}
-	free(out);
-}
-
 static int	ft_checknextcset(char *s, char c)
 {
 	size_t	i;
@@ -70,6 +57,8 @@ char	**ft_split(char *s, char c)
 	char	**out;
 
 	j = 0;
+	if (s == NULL)
+		return (NULL);
 	out = ft_calloc(sizeof(char *), ft_count(s, c) + 1);
 	if (!out)
 		return (NULL);
