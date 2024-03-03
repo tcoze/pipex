@@ -1,6 +1,6 @@
 CC = gcc
 NAME = pipex
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror #-g3 -fsanitize=address
 
 SRC_PATH = src/
 PRINTF_PATH = ft_printf/
@@ -17,7 +17,6 @@ SRC =	ft_bzero.c\
 		ft_strlen.c\
 		parsing.c\
 		parsing2.c\
-		pipex.c \
 		process.c \
 		ft_free.c \
 		main.c \
@@ -32,7 +31,7 @@ all: $(OBJ_PATH) $(NAME)
 $(PRINTF):
 	$(MAKE) -C $(PRINTF_PATH)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c #ft_printf/ft_printf.h header/pipex.h
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	$(CC) $(CFLAGS) -I ft_printf/ -I header -c $< -o $@
 
 $(OBJ_PATH):

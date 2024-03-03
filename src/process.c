@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-int	child_process(int f1, struct s_cmd cmd, char **envp, int *pfd)
+int	child_process(int f1, struct s_cmd *cmd, char **envp, int *pfd)
 {
 	if (dup2 (f1, STDIN_FILENO) < 0)
 		return (-1);
@@ -24,12 +24,12 @@ int	child_process(int f1, struct s_cmd cmd, char **envp, int *pfd)
 		return (close(f1), -1);
 	if (close(f1) == -1)
 		return (-1);
-	if (execve(cmd.f_path, cmd.first, envp) == -1)
+	if (execve(cmd->f_path, cmd->first, envp) == -1)
 		return (-1);
 	return (0);
 }
 
-int	parent_process(int f2, struct s_cmd cmd, char **envp, int *pfd)
+int	parent_process(int f2, struct s_cmd *cmd, char **envp, int *pfd)
 {
 	if (dup2 (pfd[STDIN_FILENO], STDIN_FILENO) < 0)
 		return (-1);
@@ -41,7 +41,7 @@ int	parent_process(int f2, struct s_cmd cmd, char **envp, int *pfd)
 		return (close(f2), -1);
 	if (close(f2) == -1)
 		return (-1);
-	if (execve(cmd.s_path, cmd.second, envp) == -1)
+	if (execve(cmd->s_path, cmd->second, envp) == -1)
 		return (-1);
 	return (0);
 }

@@ -12,25 +12,25 @@
 
 #include "pipex.h"
 
-void	clear_struct(struct s_cmd cmd)
+void	clear_struct(struct s_cmd *cmd)
 {
-	if (cmd.f_path)
-		free(cmd.f_path);
-	if (cmd.s_path)
-		free(cmd.s_path);
-	if (cmd.first)
+	if (cmd->f_path)
+		free(cmd->f_path);
+	if (cmd->s_path)
+		free(cmd->s_path);
+	if (cmd->first)
 	{
-		if (ft_count_path (cmd.first) != -1)
-			ft_freeall (cmd.first, ft_count_path (cmd.first));
+		if (ft_count_path (cmd->first) != -1)
+			ft_freeall (cmd->first, ft_count_path (cmd->first));
 		else
-			free(cmd.first);
+			free(cmd->first);
 	}
-	if (cmd.second)
+	if (cmd->second)
 	{
-		if (ft_count_path (cmd.second) != -1)
-			ft_freeall (cmd.second, ft_count_path (cmd.second));
+		if (ft_count_path (cmd->second) != -1)
+			ft_freeall (cmd->second, ft_count_path (cmd->second));
 		else
-			free(cmd.second);
+			free(cmd->second);
 	}
 }
 
