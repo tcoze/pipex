@@ -20,6 +20,7 @@ SRC =	ft_bzero.c\
 		pipex.c \
 		process.c \
 		ft_free.c \
+		main.c \
 		ft_strncmp.c
 
 SRCS = $(addprefix $(SRC_PATH), $(SRC))
