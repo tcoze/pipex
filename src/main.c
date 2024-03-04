@@ -33,7 +33,7 @@ int	pipex(struct s_cmd *cmd, char **envp)
 	int		pfd[2];
 
 
-	if (cmd->s_path != NULL && pipe(pfd) == -1)
+	if ((cmd->s_path != NULL || cmd->f_path) && cmd->f2 && pipe(pfd) == -1)
 	{
 		if (cmd->f1 >= 0)
 			close(cmd->f1);
@@ -55,7 +55,7 @@ int	pipex(struct s_cmd *cmd, char **envp)
 				return (-1);
 		close(cmd->f1);
 	}
-	if (cmd->f_path != NULL && cmd->f2 >= 0)
+	if (cmd->s_path != NULL && cmd->f2 >= 0)
 	{
 		if (parent_process (cmd, envp, pfd) == -1)
 			return (-1);
@@ -82,8 +82,6 @@ int	main(int argc, char *argv[], char **envp)
 	if (argc != 5)
 		return (ft_printf (2, "Put only 5 arguments\n"), -1);
 	cmd.f2 = open (argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);  // FILE 2 OPEN ICI
-	if (cmd.f2 < 0)
-		return (-1);
 	cmd.f1 = open (argv[1], O_RDONLY);  // FILE 1 OPEN ICI
 	if (cmd.f1 < 0)
 		ft_printf (2, "%s: No such file or directory\n", argv[1]);

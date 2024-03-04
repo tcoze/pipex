@@ -28,7 +28,7 @@
 
 int	child_process(struct s_cmd *cmd, char **envp, int *pfd)
 {
-	if (cmd->f1 >= 0 && cmd->f_path)
+	if (cmd->f1 >= 0 && cmd->f_path && cmd->first)
 	{
 		if (dup2(cmd->f1, STDIN_FILENO) < 0)
 			return (close(cmd->f1), -1);
@@ -57,18 +57,21 @@ int	child_process(struct s_cmd *cmd, char **envp, int *pfd)
 
 int	parent_process(struct s_cmd *cmd, char **envp, int *pfd)
 {
-	if (cmd->f2 >= 0 && cmd->s_path)
+	if (cmd->s_path && cmd->second)
 	{
-		if (dup2(cmd->f2, STDOUT_FILENO) < 0)
-			return (close (cmd->f2), -1);
-		if (dup2(pfd[STDIN_FILENO], STDIN_FILENO) < 0)
-			return (close (cmd->f2), -1);
-		if (close(pfd[STDOUT_FILENO]) == -1)
-			return (close(pfd[STDIN_FILENO]), close (cmd->f2), -1);
-		if (close(pfd[STDIN_FILENO]) == -1)
-			return (close (cmd->f2), -1);
-		if (close(cmd->f2) == -1)
-			return (-1);
+		if (cmd->f2 >= 0)
+		{
+			if (dup2 (cmd->f2, STDOUT_FILENO) < 0)
+				return (close (cmd->f2), -1);
+			if (dup2 (pfd[STDIN_FILENO], STDIN_FILENO) < 0)
+				return (close (cmd->f2), -1);
+			if (close (pfd[STDOUT_FILENO]) == -1)
+				return (close (pfd[STDIN_FILENO]), close (cmd->f2), -1);
+			if (close (pfd[STDIN_FILENO]) == -1)
+				return (close (cmd->f2), -1);
+			if (close (cmd->f2) == -1)
+				return (-1);
+		}
 //		print_fd();
 //		dprintf(2, "f2 : %d\n", cmd->f2);
 		if (execve(cmd->s_path, cmd->second, envp) == -1)
