@@ -27,6 +27,8 @@ typedef struct s_cmd
 	char	**second;
 	char	*f_path;
 	char	*s_path;
+	int		f1;
+	int		f2;
 }	t_cmd;
 
 int		check_parsing(char *argv[], char **envp);
@@ -38,9 +40,9 @@ void	*ft_memset(void *s, int c, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 char	*ft_strjoin(char const *s1, char const *s2);
-int		child_process(int f1, struct s_cmd *cmd, char **envp, int *pfd);
-int		parent_process(int f2, struct s_cmd *cmd, char **envp, int *pfd);
-int		pipex(int f1, struct s_cmd *cmd, char **envp, int f2);
+int		child_process(struct s_cmd *cmd, char **envp, int *pfd);
+int		parent_process(struct s_cmd *cmd, char **envp, int *pfd);
+int		pipex(struct s_cmd *cmd, char **envp);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_count_path(char **path);
 char	*ft_check_access(char *str2);
