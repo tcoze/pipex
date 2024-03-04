@@ -21,8 +21,12 @@ int	pipex(int f1, struct s_cmd *cmd, char **envp, int f2)
 
 
 	if (pipe(pfd) == -1)
-		return (close(f1), -1);
-	if (cmd->first != NULL)
+	{
+		if (f1 >= 0)
+			close (f1);
+		return (close (f1), -1);
+	}
+	if (cmd->first != NULL && f1 >= 0)
 	{
 		pid1 = fork ();
 		if (pid1 == -1)
@@ -31,8 +35,7 @@ int	pipex(int f1, struct s_cmd *cmd, char **envp, int f2)
 			if (child_process (f1, cmd, envp, pfd) == -1)
 				return (close (f1), close(pfd[0]), close (pfd[1]), -1);
 	}
-	close(f1);
-	if (cmd->second != NULL)
+	if (cmd->second != NULL && f2 >= 0)
 	{
 		if (parent_process (f2, cmd, envp, pfd) == -1)
 			return (close(f2), -1);
@@ -49,7 +52,6 @@ int	main(int argc, char *argv[], char **envp)
 	int		f1;
 	int 	f2;
 
-	setbuf(stdout, NULL);
 	cmd.first = NULL;
 	cmd.f_path = NULL;
 	cmd.second = NULL;
@@ -63,8 +65,20 @@ int	main(int argc, char *argv[], char **envp)
 	if (f1 < 0)
 		ft_printf (2, "%s: No such file or directory\n", argv[1]);
 	if (parsing(argv, envp, &cmd) == -1) // PARSING CMD
-		return (close(f1), close(f2), -1);
+	{
+		if (f1 >= 0)
+			close(f1);
+		return (close (f2), -1);
+	}
+	if (cmd.second == NULL)
+	{
+		if (f1 >= 0)
+			close(f1);
+		if (f2 >= 0)
+			close(f2);
+		return (clear_struct (&cmd), 0);
+	}
 	if (pipex(f1, &cmd, envp, f2) == -1)
-		return (close(f2), clear_struct(&cmd), close(f1), -1);
-	return (close(f2), close(f1), clear_struct(&cmd), 0);
+		return (clear_struct(&cmd), -1);
+	return (clear_struct(&cmd), 0);
 }
