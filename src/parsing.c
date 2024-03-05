@@ -13,59 +13,8 @@
 #include "pipex.h"
 #include "ft_printf.h"
 
-int control_path(struct s_cmd *cmd, char *path, int j)
+static void	print_not_found(struct s_cmd *cmd, int j)
 {
-	char	*str;
-	char	*str2;
-
-	if (j == 2 && cmd->f_path == NULL && cmd->first != NULL)
-	{
-		str = ft_strjoin (path, "/");
-		if (str == NULL)
-			return (-1);
-		str2 = ft_strjoin (str, cmd->first[0]);
-		free (str);
-		if (str2 == NULL)
-			return (-1);
-		if (access (str2, F_OK) == -1)
-			return (free (str2), 1);
-		cmd->f_path = ft_strjoin (cmd->f_path, str2);
-		free (str2);
-		if (cmd->f_path == NULL)
-			return (-1);
-	}
-	if (j == 3 && cmd->s_path == NULL && cmd->second != NULL)
-	{
-		str = ft_strjoin (path, "/");
-		if (str == NULL)
-		return (-1);
-		str2 = ft_strjoin (str, cmd->second[0]);
-		free (str);
-		if (str2 == NULL)
-			return (-1);
-		if (access (str2, F_OK) == -1)
-			return (free (str2), 1);
-		cmd->s_path = ft_strjoin (cmd->s_path, str2);
-		free (str2);
-		if (cmd->s_path == NULL)
-			return (-1);
-	}
-	return (0);
-}
-
-int fill_path(struct s_cmd *cmd, char **path, int j)
-{
-	int i;
-	int control_value;
-
-	i = 0;
-	while(path[i])
-	{
-		control_value = control_path(cmd, path[i], j);
-		if (control_value == -1)
-			return (clear_struct(cmd), -1);
-		i++;
-	}
 	if (j == 2 && cmd->f_path == NULL)
 	{
 		if (cmd->first != NULL)
@@ -80,38 +29,44 @@ int fill_path(struct s_cmd *cmd, char **path, int j)
 		else
 			ft_printf (2, """: command not found\n");
 	}
+}
+
+int	fill_path(struct s_cmd *cmd, char **path, int j)
+{
+	int	i;
+	int	control_value;
+
+	i = 0;
+	while (path[i])
+	{
+		control_value = control_path(cmd, path[i], j);
+		if (control_value == -1)
+			return (clear_struct(cmd), -1);
+		i++;
+	}
+	print_not_found(cmd, j);
 	return (0);
 }
 
 int	fill_struct(char *argv, struct s_cmd *cmd, char **path, int j)
 {
-	if (j == 2) // REMPLISSAGE STRUCT PREMIERE COMMANDE
+	if (j == 2)
 	{
 		if (argv[0] != '\0')
 		{
 			cmd->first = ft_split (argv, ' ');
 			if (cmd->first[0] == NULL)
 				return (ft_freeall (path, ft_count_path (path)), -1);
-			if (ft_strncmp(cmd->first[0], "sudo", 4) == 0)
-			{
-				ft_printf (2, "/usr/bin/sudo: Permission denied\n");
-				ft_freeall (cmd->first, ft_count_path (cmd->first));
-			}
 		}
 	}
-	if (j == 3) // REMPLISSAGE STRUCT SECONDE COMMANDE
+	if (j == 3)
 	{
 		if (argv[0] != '\0')
 		{
 			cmd->second = ft_split (argv, ' ');
 			if (cmd->second == NULL)
-				return (ft_freeall (path, ft_count_path (path)), clear_struct (
-					cmd), -1);
-			if (ft_strncmp(cmd->second[0], "sudo", 4) == 0)
-			{
-				ft_printf (2, "/usr/bin/sudo: Permission denied\n");
-				ft_freeall (cmd->second, ft_count_path (cmd->second));
-			}
+				return (ft_freeall(path, ft_count_path (path)),
+					clear_struct(cmd), -1);
 		}
 	}
 	return (0);
@@ -119,9 +74,9 @@ int	fill_struct(char *argv, struct s_cmd *cmd, char **path, int j)
 
 int	parsing(char **argv, char **envp, struct s_cmd *cmd)
 {
-	char **path;
-	char temp;
-	int i;
+	char	**path;
+	char	temp;
+	int		i;
 
 	i = 2;
 	path = NULL;

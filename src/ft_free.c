@@ -12,6 +12,17 @@
 
 #include "pipex.h"
 
+int	double_close(int f1, int f2)
+{
+	if (f1 >= 0)
+		if (close(f1) == -1)
+			return (-1);
+	if (f2 >= 0)
+		if (close(f2) == -1)
+			return (-1);
+	return (0);
+}
+
 void	clear_struct(struct s_cmd *cmd)
 {
 	if (cmd->f_path)

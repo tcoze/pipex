@@ -29,6 +29,10 @@ typedef struct s_cmd
 	char	*s_path;
 	int		f1;
 	int		f2;
+	int		pfd[2];
+	pid_t	pid1;
+	pid_t	pid2;
+
 }	t_cmd;
 
 int		check_parsing(char *argv[], char **envp);
@@ -40,8 +44,8 @@ void	*ft_memset(void *s, int c, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 char	*ft_strjoin(char const *s1, char const *s2);
-int		child_process(struct s_cmd *cmd, char **envp, int *pfd);
-int		parent_process(struct s_cmd *cmd, char **envp, int *pfd);
+int		child_process(struct s_cmd *cmd, char **envp);
+int		parent_process(struct s_cmd *cmd, char **envp);
 int		pipex(struct s_cmd *cmd, char **envp);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_count_path(char **path);
@@ -53,8 +57,9 @@ void	ft_freeall(char **out, int j);
 int		check_absolute_path(char *argv, char **cmd, char *cmd_path);
 int		ft_check_cmd(char *argv, struct s_cmd *cmd, char **path, int j);
 int		fill_struct(char *argv, struct s_cmd *cmd, char **path, int j);
-int	 	fill_path(struct s_cmd *cmd, char **path, int j);
-int 	control_path(struct s_cmd *cmd, char *path, int j);
+int		fill_path(struct s_cmd *cmd, char **path, int j);
+int		control_path(struct s_cmd *cmd, char *path, int j);
 int		parsing(char **argv, char **envp, struct s_cmd *cmd);
+int		double_close(int f1, int f2);
 
 #endif

@@ -20,6 +20,7 @@ SRC =	ft_bzero.c\
 		process.c \
 		ft_free.c \
 		main.c \
+		parsing3.c \
 		ft_strncmp.c
 
 SRCS = $(addprefix $(SRC_PATH), $(SRC))

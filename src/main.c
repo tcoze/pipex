@@ -13,26 +13,59 @@
 #include "pipex.h"
 #include "ft_printf.h"
 
-static void first_fill(struct s_cmd *cmd)
+static int	first_fork(struct s_cmd *cmd, char **envp)
+{
+	if (cmd->f_path != NULL && cmd->f1 >= 0)
+	{
+		cmd->pid1 = fork();
+		if (cmd->pid1 == -1)
+		{
+			if (cmd->f2 >= 0)
+				close(cmd->f2);
+			return (close(cmd->f1), -1);
+		}
+		if (cmd->pid1 == 0)
+			if (child_process(cmd, envp) == -1)
+				return (-1);
+	}
+	return (0);
+}
+
+static int	second_fork(struct s_cmd *cmd, char **envp)
+{
+	if (cmd->s_path != NULL && cmd->f2 >= 0)
+	{
+		cmd->pid2 = fork ();
+		if (cmd->pid2 == -1)
+		{
+			if (cmd->f2 >= 0)
+				close(cmd->f2);
+			return (-1);
+		}
+		if (cmd->pid2 == 0)
+			if (parent_process(cmd, envp) == -1)
+				return (-1);
+	}
+	return (0);
+}
+
+static void	first_fill(struct s_cmd *cmd)
 {
 	cmd->first = NULL;
 	cmd->f_path = NULL;
 	cmd->second = NULL;
 	cmd->s_path = NULL;
+	cmd->pfd[0] = 0;
+	cmd->pfd[1] = 0;
+	cmd->pid1 = 0;
+	cmd->pid2 = 0;
 }
 
 int	pipex(struct s_cmd *cmd, char **envp)
 {
-	pid_t	pid1;
-	pid_t	pid2;
 	int		status;
-	int		pfd[2];
 
-	pfd[0] = 0;
-	pfd[1] = 0;
-	pid1 = 0;
-	pid2 = 0;
-	if ((cmd->s_path != NULL || cmd->f_path != NULL) && pipe(pfd) == -1)
+	if ((cmd->s_path != NULL || cmd->f_path != NULL) && pipe(cmd->pfd) == -1)
 	{
 		if (cmd->f1 >= 0)
 			close(cmd->f1);
@@ -40,50 +73,25 @@ int	pipex(struct s_cmd *cmd, char **envp)
 			close(cmd->f2);
 		return (-1);
 	}
-	if (cmd->f_path != NULL && cmd->f1 >= 0)
-	{
-		pid1 = fork ();
-		if (pid1 == -1)
-		{
-			if (cmd->f2 >= 0)
-				close(cmd->f2);
-			return (close(cmd->f1), -1);
-		}
-		if (pid1 == 0)
-			if (child_process(cmd, envp, pfd) == -1)
-				return (-1);
-	}
-	if (cmd->f1 >= 0)
-		close(cmd->f1);
-	if (pfd[1] >= 0)
-		close(pfd[1]);
-	if (cmd->s_path != NULL && cmd->f2 >= 0)
-	{
-		pid2 = fork ();
-		if (pid2 == -1)
-		{
-			if (cmd->f2 >= 0)
-				close(cmd->f2);
-			return (-1);
-		}
-		if (pid2 == 0)
-			if (parent_process(cmd, envp, pfd) == -1)
-				return (-1);
-	}
-	if (pid1 != 0)
-		waitpid(pid1, &status, 0);
-	if (pid2 != 0)
-		waitpid(pid2, &status, 0);
-	if (cmd->f2 >= 0)
-		close(cmd->f2);
-	if (pfd[0] >= 0)
-		close(pfd[0]);
+	if (first_fork(cmd, envp) == -1)
+		return (-1);
+	if (double_close(cmd->f1, cmd->pfd[1]) == -1)
+		return (-1);
+	if (second_fork(cmd, envp) == -1)
+		return (-1);
+	if (cmd->pid1 != 0)
+		waitpid(cmd->pid1, &status, 0);
+	if (cmd->pid2 != 0)
+		waitpid(cmd->pid2, &status, 0);
+	if (double_close(cmd->f2, cmd->pfd[0]) == -1)
+		return (-1);
 	return (0);
 }
 
 int	main(int argc, char *argv[], char **envp)
 {
 	t_cmd	cmd;
+
 	first_fill(&cmd);
 	if (argc != 5)
 		return (ft_printf (2, "Put only 5 arguments\n"), -1);
