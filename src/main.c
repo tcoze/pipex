@@ -13,18 +13,13 @@
 #include "pipex.h"
 #include "ft_printf.h"
 
-/*#include <sys/stat.h>
-static void print_fd(void)
+static void first_fill(struct s_cmd *cmd)
 {
-	int i = 0;
-	struct stat s;
-	while (i < 1024)
-	{
-		if (!fstat(i, &s))
-			dprintf(2, "fd open = %d\n", i);
-		i++;
-	}
-}*/
+	cmd->first = NULL;
+	cmd->f_path = NULL;
+	cmd->second = NULL;
+	cmd->s_path = NULL;
+}
 
 int	pipex(struct s_cmd *cmd, char **envp)
 {
@@ -89,24 +84,20 @@ int	pipex(struct s_cmd *cmd, char **envp)
 int	main(int argc, char *argv[], char **envp)
 {
 	t_cmd	cmd;
-
-	cmd.first = NULL;
-	cmd.f_path = NULL;
-	cmd.second = NULL;
-	cmd.s_path = NULL;
+	first_fill(&cmd);
 	if (argc != 5)
 		return (ft_printf (2, "Put only 5 arguments\n"), -1);
-	cmd.f2 = open (argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);  // FILE 2 OPEN ICI
+	cmd.f2 = open (argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (envp == NULL)
 	{
 		if (cmd.f2 >= 0)
 			return (close(cmd.f2), -1);
 		return (-1);
 	}
-	cmd.f1 = open (argv[1], O_RDONLY);  // FILE 1 OPEN ICI
+	cmd.f1 = open (argv[1], O_RDONLY);
 	if (cmd.f1 < 0)
 		ft_printf (2, "%s: No such file or directory\n", argv[1]);
-	if (parsing(argv, envp, &cmd) == -1) // PARSING CMD
+	if (parsing(argv, envp, &cmd) == -1)
 	{
 		if (cmd.f1 >= 0)
 			close(cmd.f1);

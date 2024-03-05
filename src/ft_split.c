@@ -68,10 +68,7 @@ char	**ft_split(char *s, char c)
 		{
 			out[j] = malloc(sizeof (char) * (ft_checknextcset(s, c) + 1));
 			if (!out[j])
-			{
-				ft_freeall(out, j);
-				return (NULL);
-			}
+				return (ft_freeall(out, j), NULL);
 			ft_strlcpy(out[j], s, ft_checknextcset(s, c) + 1);
 			s = s + ft_checknextcset(s, c);
 			j++;

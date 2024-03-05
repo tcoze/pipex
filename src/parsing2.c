@@ -76,8 +76,7 @@ char	**ft_find_path(char **envp, char **path)
 	i = 0;
 	while (envp[i])
 	{
-		if (ft_strchr_str(envp[i], "PATH=") != NULL
-			&& ft_strncmp(envp[i], "PATH=", 5) == 0)
+		if (ft_strchr_str(envp[i], "PATH=") != NULL && ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
 			p_find = ft_strchr_str(envp[i], "PATH=");
 			path = ft_split(p_find, ':');
@@ -87,5 +86,5 @@ char	**ft_find_path(char **envp, char **path)
 		}
 		i++;
 	}
-	return (ft_freeall(path, ft_count_path(path)), NULL);
+	return (NULL);
 }
