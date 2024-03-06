@@ -43,7 +43,7 @@ size_t	ft_strlen(const char *s);
 void	*ft_memset(void *s, int c, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char *s2);
 int		child_process(struct s_cmd *cmd, char **envp);
 int		parent_process(struct s_cmd *cmd, char **envp);
 int		pipex(struct s_cmd *cmd, char **envp);
@@ -54,12 +54,14 @@ char	**ft_find_path(char **envp, char **path);
 void	clear_struct_f(struct s_cmd *cmd);
 void	clear_struct(struct s_cmd *cmd);
 void	ft_freeall(char **out, int j);
-int		check_absolute_path(char *argv, char **cmd, char *cmd_path);
+int		check_absolute_path(char *argv, char ***cmd, char **cmd_path);
 int		ft_check_cmd(char *argv, struct s_cmd *cmd, char **path, int j);
 int		fill_struct(char *argv, struct s_cmd *cmd, char **path, int j);
 int		fill_path(struct s_cmd *cmd, char **path, int j);
 int		control_path(struct s_cmd *cmd, char *path, int j);
 int		parsing(char **argv, char **envp, struct s_cmd *cmd);
 int		double_close(int f1, int f2);
+char	*ft_strjoin_space(char *s1, char *s2);
+int		ft_strchr_space(char *s);
 
 #endif

@@ -104,7 +104,7 @@ int	main(int argc, char *argv[], char **envp)
 	}
 	cmd.f1 = open (argv[1], O_RDONLY);
 	if (cmd.f1 < 0)
-		ft_printf (2, "%s: No such file or directory\n", argv[1]);
+		perror(argv[1]);
 	if (parsing(argv, envp, &cmd) == -1)
 	{
 		if (cmd.f1 >= 0)

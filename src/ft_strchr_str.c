@@ -32,3 +32,15 @@ char	*ft_strchr_str(char *s, char *c)
 	}
 	return (NULL);
 }
+
+int	ft_strchr_space(char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i] != '\0' && s[i] != ' ')
+	{
+		i++;
+	}
+	return (i);
+}

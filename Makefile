@@ -1,6 +1,6 @@
 CC = cc
 NAME = pipex
-CFLAGS = -Wall -Wextra -Werror #-g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror
 
 SRC_PATH = src/
 PRINTF_PATH = ft_printf/

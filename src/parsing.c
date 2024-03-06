@@ -81,17 +81,15 @@ int	parsing(char **argv, char **envp, struct s_cmd *cmd)
 	i = 2;
 	path = NULL;
 	path = ft_find_path (envp, path);
-	if (path == NULL)
-		return (-1);
 	while (i <= 3)
 	{
 		if (i == 2)
-			temp = check_absolute_path(argv[i], cmd->first, cmd->f_path);
+			temp = check_absolute_path(argv[i], &cmd->first, &cmd->f_path);
 		if (i == 3)
-			temp = check_absolute_path(argv[i], cmd->second, cmd->s_path);
+			temp = check_absolute_path(argv[i], &cmd->second, &cmd->s_path);
 		if (temp == -1)
 			return (-1);
-		if (temp == 0)
+		if (temp == 0 && path != NULL)
 			if (ft_check_cmd(argv[i], cmd, path, i) == -1)
 				return (-1);
 		i++;

@@ -30,29 +30,7 @@ char	*ft_check_access(char *str2)
 		return (str2);
 }
 
-static int	acces_ab_path(char *argv, char *cmd_path, char **temp, char **cmd)
-{
-	int	i;
-
-	if (ft_check_access(argv) != NULL)
-	{
-		cmd_path = ft_strjoin(cmd_path, argv);
-		if (cmd_path == NULL)
-			return (-1);
-		temp = ft_split(argv, '/');
-		if (temp == NULL)
-			return (-1);
-		i = ft_count_path(temp);
-		cmd = ft_split(temp[i], ' ');
-		if (cmd == NULL)
-			return (-1);
-		ft_freeall(temp, i);
-		return (1);
-	}
-	return (0);
-}
-
-int	check_absolute_path(char *argv, char **cmd, char *cmd_path)
+int	check_absolute_path(char *argv, char ***cmd, char **cmd_path)
 {
 	int		i;
 	char	**temp;
@@ -61,18 +39,22 @@ int	check_absolute_path(char *argv, char **cmd, char *cmd_path)
 	temp = NULL;
 	if (ft_strchr_str (argv, "/"))
 	{
-		if (acces_ab_path(argv, cmd_path, temp, cmd) != 0)
+		cmd_path[0] = ft_strjoin_space(cmd_path[0], argv);
+		temp = ft_split(argv, '/');
+		if (cmd_path == NULL || temp == NULL)
 			return (-1);
-		if (ft_check_access(argv) == NULL)
+		while (temp[i] && temp[i + 1])
+			i++;
+		cmd[0] = ft_split(temp[i], ' ');
+		if (cmd == NULL)
+			return (-1);
+		if (ft_check_access(cmd_path[0]) == NULL)
 		{
-			temp = ft_split(argv, '/');
-			if (temp == NULL)
-				return (-1);
-			i = ft_count_path(temp);
-			ft_printf(2, "%s: command not found\n", temp[i]);
-			ft_freeall(temp, i);
-			return (2);
+			ft_printf (2, "%s: command not found\n", cmd[0][0]);
+			return (free(cmd_path), ft_freeall(cmd[0], ft_count_path(cmd[0])),
+				ft_freeall(temp, ft_count_path(temp)), -1);
 		}
+		return (ft_freeall(temp, ft_count_path(temp)), 1);
 	}
 	return (0);
 }
@@ -83,6 +65,8 @@ char	**ft_find_path(char **envp, char **path)
 	char	*p_find;
 
 	i = 0;
+	if (envp == NULL)
+		return (NULL);
 	while (envp[i])
 	{
 		if (ft_strchr_str(envp[i], "PATH=") != NULL
