@@ -63,5 +63,6 @@ int		parsing(char **argv, char **envp, struct s_cmd *cmd);
 int		double_close(int f1, int f2);
 char	*ft_strjoin_space(char *s1, char *s2);
 int		ft_strchr_space(char *s);
+int		ft_strchr(char *s, char c);
 
 #endif

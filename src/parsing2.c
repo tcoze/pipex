@@ -30,6 +30,15 @@ char	*ft_check_access(char *str2)
 		return (str2);
 }
 
+void	acces_fail(char **cmd_path, char ***cmd, char	**temp)
+{
+	ft_printf (2, "%s: command not found\n", cmd[0][0]);
+	if (cmd_path[0] != NULL)
+		free(cmd_path[0]);
+	ft_freeall(cmd[0], ft_count_path(cmd[0]));
+	ft_freeall(temp, ft_count_path(temp));
+}
+
 int	check_absolute_path(char *argv, char ***cmd, char **cmd_path)
 {
 	int		i;
@@ -49,11 +58,7 @@ int	check_absolute_path(char *argv, char ***cmd, char **cmd_path)
 		if (cmd == NULL)
 			return (-1);
 		if (ft_check_access(cmd_path[0]) == NULL)
-		{
-			ft_printf (2, "%s: command not found\n", cmd[0][0]);
-			return (free(cmd_path), ft_freeall(cmd[0], ft_count_path(cmd[0])),
-				ft_freeall(temp, ft_count_path(temp)), -1);
-		}
+			return (acces_fail (cmd_path, cmd, temp), -1);
 		return (ft_freeall(temp, ft_count_path(temp)), 1);
 	}
 	return (0);

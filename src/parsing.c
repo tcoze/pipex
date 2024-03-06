@@ -65,8 +65,7 @@ int	fill_struct(char *argv, struct s_cmd *cmd, char **path, int j)
 		{
 			cmd->second = ft_split (argv, ' ');
 			if (cmd->second == NULL)
-				return (ft_freeall(path, ft_count_path (path)),
-					clear_struct(cmd), -1);
+				return (ft_freeall (path, ft_count_path (path)), -1);
 		}
 	}
 	return (0);
@@ -78,23 +77,20 @@ int	parsing(char **argv, char **envp, struct s_cmd *cmd)
 	char	temp;
 	int		i;
 
-	i = 2;
+	i = 1;
 	path = NULL;
 	path = ft_find_path (envp, path);
-	while (i <= 3)
+	while (++i <= 3)
 	{
 		if (i == 2)
 			temp = check_absolute_path(argv[i], &cmd->first, &cmd->f_path);
 		if (i == 3)
 			temp = check_absolute_path(argv[i], &cmd->second, &cmd->s_path);
 		if (temp == -1)
-			return (-1);
+			return (ft_freeall(path, ft_count_path(path)), -1);
 		if (temp == 0 && path != NULL)
 			if (ft_check_cmd(argv[i], cmd, path, i) == -1)
 				return (-1);
-		i++;
 	}
-	if (path != NULL)
-		ft_freeall(path, ft_count_path(path));
-	return (0);
+	return (ft_freeall(path, ft_count_path(path)), 0);
 }

@@ -47,13 +47,17 @@ void	clear_struct(struct s_cmd *cmd)
 
 void	ft_freeall(char **out, int j)
 {
-	while (j > -1)
+	if (out != NULL)
 	{
-		free(out[j]);
-		j--;
+		while (j > -1)
+		{
+			if (out[j])
+				free (out[j]);
+			j--;
+		}
+		if (out)
+			free (out);
 	}
-	if (out)
-		free(out);
 }
 
 int	ft_count_path(char **path)
