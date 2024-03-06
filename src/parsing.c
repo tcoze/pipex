@@ -94,6 +94,7 @@ int	parsing(char **argv, char **envp, struct s_cmd *cmd)
 				return (-1);
 		i++;
 	}
-	ft_freeall(path, ft_count_path(path));
+	if (path != NULL)
+		ft_freeall(path, ft_count_path(path));
 	return (0);
 }
