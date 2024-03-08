@@ -37,8 +37,9 @@ int	child_process(struct s_cmd *cmd, char **envp)
 			return (-1);
 		if (cmd->f2 >= 0)
 			close(cmd->f2);
-		if (execve(cmd->f_path, cmd->first, envp) == -1)
-			return (print_cmd(cmd->first[0]), -1);
+		if (cmd->first != NULL)
+			if (execve(cmd->f_path, cmd->first, envp) == -1)
+				return (print_cmd(cmd->first[0]), -1);
 	}
 	if (cmd->f1 >= 0)
 		close(cmd->f1);

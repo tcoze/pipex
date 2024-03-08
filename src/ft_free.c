@@ -25,18 +25,18 @@ int	double_close(int f1, int f2)
 
 void	clear_struct(struct s_cmd *cmd)
 {
-	if (cmd->f_path)
+	if (cmd->f_path != NULL)
 		free(cmd->f_path);
-	if (cmd->s_path)
+	if (cmd->s_path != NULL)
 		free(cmd->s_path);
-	if (cmd->first)
+	if (cmd->first != NULL)
 	{
 		if (ft_count_path (cmd->first) != -1)
 			ft_freeall (cmd->first, ft_count_path (cmd->first));
 		else
 			free(cmd->first);
 	}
-	if (cmd->second)
+	if (cmd->second != NULL)
 	{
 		if (ft_count_path (cmd->second) != -1)
 			ft_freeall (cmd->second, ft_count_path (cmd->second));
@@ -65,7 +65,7 @@ int	ft_count_path(char **path)
 	int	i;
 
 	i = 0;
-	if (path[0] == NULL)
+	if (path == NULL)
 		return (-1);
 	while (path[i] && path[i + 1])
 		i++;

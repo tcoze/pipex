@@ -15,14 +15,14 @@
 
 static void	print_not_found(struct s_cmd *cmd, int j)
 {
-	if (j == 2 && cmd->f_path == NULL)
+	if (j == 2 && cmd->f_path == NULL && cmd->f1 != -1)
 	{
 		if (cmd->first != NULL)
 			ft_printf (2, "%s: command not found\n", cmd->first[0]);
 		else
 			ft_printf (2, """: command not found\n");
 	}
-	if (j == 3 && cmd->s_path == NULL)
+	if (j == 3 && cmd->s_path == NULL && cmd->f2 != -1)
 	{
 		if (cmd->second != NULL)
 			ft_printf (2, "%s: command not found\n", cmd->second[0]);
@@ -41,7 +41,8 @@ int	fill_path(struct s_cmd *cmd, char **path, int j)
 	{
 		control_value = control_path(cmd, path[i], j);
 		if (control_value == -1)
-			return (clear_struct(cmd), -1);
+			return (clear_struct(cmd), ft_freeall(path, ft_count_path(path)),
+				-1);
 		i++;
 	}
 	print_not_found(cmd, j);
@@ -91,6 +92,8 @@ int	parsing(char **argv, char **envp, struct s_cmd *cmd)
 		if (temp == 0 && path != NULL)
 			if (ft_check_cmd(argv[i], cmd, path, i) == -1)
 				return (-1);
+		if (temp == 0 && path == NULL)
+			ft_printf(2, "%s: command not found\n", argv[i]);
 	}
 	return (ft_freeall(path, ft_count_path(path)), 0);
 }

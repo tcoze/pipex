@@ -24,19 +24,18 @@ int	ft_check_cmd(char *argv, struct s_cmd *cmd, char **path, int j)
 
 char	*ft_check_access(char *str2)
 {
-	if (access (str2, F_OK) == -1)
+	if (access (str2, X_OK) == -1)
 		return (NULL);
 	else
 		return (str2);
 }
 
-void	acces_fail(char **cmd_path, char ***cmd, char	**temp)
+static int	acces_fail(char **cmd_path)
 {
-	ft_printf (2, "%s: command not found\n", cmd[0][0]);
-	if (cmd_path[0] != NULL)
-		free(cmd_path[0]);
-	ft_freeall(cmd[0], ft_count_path(cmd[0]));
-	ft_freeall(temp, ft_count_path(temp));
+	perror(*cmd_path);
+	free(*cmd_path);
+	*cmd_path = NULL;
+	return (1);
 }
 
 int	check_absolute_path(char *argv, char ***cmd, char **cmd_path)
@@ -48,17 +47,19 @@ int	check_absolute_path(char *argv, char ***cmd, char **cmd_path)
 	temp = NULL;
 	if (ft_strchr_str (argv, "/"))
 	{
-		cmd_path[0] = ft_strjoin_space(cmd_path[0], argv);
-		temp = ft_split(argv, '/');
-		if (cmd_path == NULL || temp == NULL)
+		ft_initialize(cmd_path, argv);
+		if (*cmd_path == NULL)
 			return (-1);
+		if (ft_check_access(*cmd_path) == NULL)
+			return (acces_fail(cmd_path));
+		temp = ft_split(argv, '/');
+		if (temp == NULL)
+			return (free(*cmd_path), -1);
 		while (temp[i] && temp[i + 1])
 			i++;
-		cmd[0] = ft_split(temp[i], ' ');
-		if (cmd == NULL)
-			return (-1);
-		if (ft_check_access(cmd_path[0]) == NULL)
-			return (acces_fail (cmd_path, cmd, temp), -1);
+		*cmd = ft_split(temp[i], ' ');
+		if (*cmd == NULL)
+			return (ft_freeall(temp, ft_count_path(temp)), 0);
 		return (ft_freeall(temp, ft_count_path(temp)), 1);
 	}
 	return (0);

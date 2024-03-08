@@ -64,5 +64,7 @@ int		double_close(int f1, int f2);
 char	*ft_strjoin_space(char *s1, char *s2);
 int		ft_strchr_space(char *s);
 int		ft_strchr(char *s, char c);
+int		check_outfile(struct s_cmd *cmd, char **envp, char **argv);
+void	ft_initialize(char **cmd_path, char *argv);
 
 #endif
