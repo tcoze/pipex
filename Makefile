@@ -32,7 +32,7 @@ all: $(OBJ_PATH) $(NAME)
 $(PRINTF):
 	$(MAKE) -C $(PRINTF_PATH)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c header/pipex.h
 	$(CC) $(CFLAGS) -I ft_printf/ -I header -c $< -o $@
 
 $(OBJ_PATH):
